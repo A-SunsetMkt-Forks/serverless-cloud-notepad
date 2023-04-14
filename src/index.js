@@ -173,7 +173,7 @@ router.post('/:path/setting', async request => {
             }
         }
 
-        return returnJSON(10004, 'Update Setting failed!')
+        return returnJSON(10004, 'Update Setting failed! Try refreshing this page if you had just set a password.')
     }
 })
 
