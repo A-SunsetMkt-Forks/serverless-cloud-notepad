@@ -8,10 +8,26 @@ import { SECRET } from './constant'
 // init
 const router = Router()
 
-router.get('/', ({ url }) => {
-    const newHash = genRandomStr(3)
+router.get('/', async ({ url }) => {
+    var randlength = 6;
+    var newHash = genRandomStr(randlength)
+    var { value, metadata } = await queryNote(newHash)
+    while (value) {
+        var randlength = randlength + 1
+        let newHash = genRandomStr(randlength)
+        var { value, metadata } = await queryNote(newHash)
+    }
     // redirect to new page
     return Response.redirect(`${url}${newHash}`, 302)
+})
+
+router.get('/robots.txt', ({ url }) => {
+    robotstxt = "User-agent: *\nDisallow: /"
+    return new Response(robotstxt, {
+        headers: {
+            'content-type': 'text/plain;charset=UTF-8',
+        },
+    })
 })
 
 router.get('/share/:md5', async ({ params }) => {
@@ -95,7 +111,7 @@ router.post('/:path/pw', async request => {
 
         const { value, metadata } = await queryNote(path)
         const valid = await checkAuth(cookie, path)
-        
+
         if (!metadata.pw || valid) {
             const pw = passwd ? await saltPw(passwd) : undefined
             try {
@@ -105,7 +121,7 @@ router.post('/:path/pw', async request => {
                         pw,
                     },
                 })
-    
+
                 return returnJSON(0, null, {
                     'Set-Cookie': Cookies.serialize('auth', '', {
                         path: `/${path}`,
@@ -130,7 +146,7 @@ router.post('/:path/setting', async request => {
 
         const { value, metadata } = await queryNote(path)
         const valid = await checkAuth(cookie, path)
-        
+
         if (!metadata.pw || valid) {
             try {
                 await NOTES.put(path, value, {
