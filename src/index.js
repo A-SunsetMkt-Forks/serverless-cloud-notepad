@@ -180,6 +180,13 @@ router.post('/:path/setting', async request => {
 router.post('/:path', async request => {
     const { path } = request.params
 
+    const cookie = Cookies.parse(request.headers.get('Cookie') || '')
+    const valid = await checkAuth(cookie, path)
+
+    if (!valid) {
+        return returnJSON(10002, 'Password auth failed!')
+    }
+
     const formData = await request.formData();
     const content = formData.get('t')
 
