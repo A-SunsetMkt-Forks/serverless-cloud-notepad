@@ -122,6 +122,9 @@ window.addEventListener('DOMContentLoaded', function () {
                         return errHandle(res.msg)
                     }
                     alert(`Password ${passwd ? 'setting' : 'remove'} success!`)
+                    if (res.data.refresh) {
+                        window.location.reload()
+                    }
                 })
                 .catch(err => errHandle(err))
         }
@@ -151,7 +154,7 @@ window.addEventListener('DOMContentLoaded', function () {
                 .catch(err => errHandle(err))
         }
     }
-    
+
     if ($shareBtn) {
         $shareBtn.onclick = function (e) {
             const isShare = e.target.checked
