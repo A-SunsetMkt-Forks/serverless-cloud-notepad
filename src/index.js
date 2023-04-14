@@ -135,7 +135,7 @@ router.post('/:path/pw', async request => {
             }
         }
 
-        return returnJSON(10003, 'Password setting failed!')
+        return returnJSON(10003, 'Password setting failed! Try refreshing this page if you had just set a password.')
     }
 })
 
@@ -188,7 +188,7 @@ router.post('/:path', async request => {
     if (!metadata.pw || valid) {
         // OK
     } else {
-        return returnJSON(10002, 'Password auth failed!')
+        return returnJSON(10002, 'Password auth failed! Try refreshing this page if you had just set a password.')
     }
 
     const formData = await request.formData();
@@ -209,7 +209,7 @@ router.post('/:path', async request => {
         console.error(error)
     }
 
-    return returnJSON(10001, 'KV insert fail!')
+    return returnJSON(10001, 'KV insert fail! Try refreshing this page if you had just set a password.')
 })
 
 router.all('*', () => returnPage('Page404', { title: '404' }))
