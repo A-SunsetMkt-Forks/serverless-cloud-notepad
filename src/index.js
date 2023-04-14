@@ -122,10 +122,11 @@ router.post('/:path/pw', async request => {
                     },
                 })
 
+                const token = await jwt.sign({ path }, SECRET)
                 return returnJSON(0, null, {
-                    'Set-Cookie': Cookies.serialize('auth', '', {
+                    'Set-Cookie': Cookies.serialize('auth', token, {
                         path: `/${path}`,
-                        expires: dayjs().subtract(100, 'day').toDate(),
+                        expires: dayjs().subtract(7, 'day').toDate(),
                         httpOnly: true,
                     })
                 })
