@@ -180,18 +180,21 @@ router.post('/:path/setting', async request => {
 
 router.post('/:path', async request => {
     const { path } = request.params
+    const { value, metadata } = await queryNote(path)
 
     const cookie = Cookies.parse(request.headers.get('Cookie') || '')
     const valid = await checkAuth(cookie, path)
 
-    if (!valid) {
+    if (!metadata.pw || valid) {
+        // OK
+    } else {
         return returnJSON(10002, 'Password auth failed!')
     }
 
     const formData = await request.formData();
     const content = formData.get('t')
 
-    const { metadata } = await queryNote(path)
+    // const { metadata } = await queryNote(path)
 
     try {
         await NOTES.put(path, content, {
